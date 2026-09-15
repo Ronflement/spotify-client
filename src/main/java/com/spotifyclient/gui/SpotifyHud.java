@@ -28,7 +28,7 @@ public final class SpotifyHud {
 		SpotifyConfig config = SpotifyConfig.get();
 		if (!config.widgetEnabled || !SpotifyAuth.isLoggedIn() || minecraft.gui.hud.isHidden()
 				|| minecraft.gui.screen() instanceof SpotifyScreen || minecraft.gui.screen() instanceof SettingsScreen
-				|| (config.widgetHideWithDebugScreen && minecraft.getDebugOverlay().showDebugScreen())) {
+				|| (config.widgetHideWithDebugScreen && minecraft.debugEntries.isOverlayVisible())) {
 			return;
 		}
 		PlayerState state = SpotifyService.state();
@@ -87,6 +87,8 @@ public final class SpotifyHud {
 			case TOP_LEFT, TOP_RIGHT -> config.widgetOffsetY;
 			case BOTTOM_LEFT, BOTTOM_RIGHT -> screenHeight - height * scale - config.widgetOffsetY;
 		};
+		x = Math.clamp(x, 0, Math.max(0, screenWidth - width * scale));
+		y = Math.clamp(y, 0, Math.max(0, screenHeight - height * scale));
 
 		graphics.pose().pushMatrix();
 		graphics.pose().translate(x, y);
